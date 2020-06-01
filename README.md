@@ -7,9 +7,9 @@ A polyrepo for a few in-house developed utilities and tools.
 
 Soda Opener is a tiny PowerShell script which reads a text file for a list of URLs and opens them all in separate Google Chrome tabs. The following kinds of URLs are supported:
 
-- apex domains (eg. shunyaek.se, google.com)
-- www subdomain (eg. www.yahoo.com)
-- full domains (eg. https://news.ycombinator.com)
+- apex domains
+- www subdomain
+- full domains
 
 Use `soda.txt` to list out the URLs and then run `opener.ps1` using Microsoft PowerShell:
 
