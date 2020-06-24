@@ -1,3 +1,5 @@
+![GitHub Super Linter](https://github.com/shunyaek/popcorn/workflows/GitHub%20Super%20Linter/badge.svg)
+
 # popcorn
 A polyrepo for a few in-house developed utilities and tools.
 
@@ -13,7 +15,7 @@ Soda Opener is a tiny PowerShell script which reads a text file for a list of UR
 
 Use `soda.txt` to list out the URLs and then run `opener.ps1` using Microsoft PowerShell:
 
-```
+```powershell
 PS C:\soda-opener> .\opener.ps1
 ```
 
@@ -38,7 +40,7 @@ etc.
 
 Before running `pier.py`, install the required dependencies using the `requirements.txt`:
 
-```
+```bash
 pip install
 ```
 
