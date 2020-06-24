@@ -7,4 +7,3 @@
         src: https://github.com/prometheus/prometheus/releases/download/v2.19.1/prometheus-2.19.1.linux-amd64.tar.gz
         dest: /tmp
         remote_src: yes
-    - name:
