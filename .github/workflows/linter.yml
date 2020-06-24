@@ -6,7 +6,7 @@ on:
       - "master"
 jobs:
   build:
-    name: Lint Code Base
+    name: GitHub Super Linter
     runs-on: ubuntu-latest
 
     steps:
