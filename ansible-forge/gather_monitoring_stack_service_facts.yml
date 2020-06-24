@@ -1,0 +1,12 @@
+- hosts: "{{ servers }}"
+  gather_facts: false
+  name: "Gather Prometheus Server service status"
+  tasks:
+    - name: Getting service facts for Prometheus Server, node_exporter and Grafana
+      service_facts:
+    - debug:
+        var: ansible_facts.services['prometheus.service']
+    - debug:
+        var: ansible_facts.services['node_exporter.service']
+    - debug:
+        var: ansible_facts.services['grafana-server.service']
