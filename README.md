@@ -56,4 +56,8 @@ Aqueduct is **shunyaek**'s internal system for transporting data from various di
 
 Aquaduct at **shunyaek** is monitored using `Prometheus` and `Grafana`.
 
+![Demo Screenshot](./assets/demo.png "Demo Screenshot")
+
+In the above screen grab, you can see `send.py` sending a message and `receive.py` receiving the message, in the split terminal window on the bottom.
+
 **Notes**: Work In Progress - *This project is currently in the development stage. More features coming soon*.
