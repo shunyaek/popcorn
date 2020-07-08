@@ -49,3 +49,11 @@ Planning to convert this to a Flask app and write a mobile app using Flutter to 
 **Coming soon**:
 
 - Support for more related technologies like Kubernetes, LXC, etc.
+
+### Aqueduct
+
+Aqueduct is **shunyaek**'s internal system for transporting data from various different sources to various different destinations. It has been implemented using `RabbitMQ`.
+
+Aquaduct at **shunyaek** is monitored using `Prometheus` and `Grafana`.
+
+**Notes**: Work In Progress - *This project is currently in the development stage. More features coming soon*.
