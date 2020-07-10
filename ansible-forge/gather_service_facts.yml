@@ -10,3 +10,7 @@
         var: ansible_facts.services['node_exporter.service']
     - debug:
         var: ansible_facts.services['grafana-server.service']
+    - name: Getting service facts for Docker
+      service_facts:
+    - debug:
+        var: ansible_facts.services['docker.service']

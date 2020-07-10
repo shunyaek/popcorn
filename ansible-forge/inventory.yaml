@@ -1,7 +1,15 @@
 all:
   children:
+    shunyaek-test:
+      hosts:
+        157.245.104.17:
+          ansible_user: "root"
+          ansible_connection: smart
     shunyaek:
       hosts:
         139.59.5.145:
+          ansible_user: "root"
+          ansible_connection: smart
+        157.245.104.17:
           ansible_user: "root"
           ansible_connection: smart

@@ -1,0 +1,42 @@
+- hosts: shunyaek
+  gather_facts: false
+  name: "Installs Docker CE on CentOS 8"
+  tasks:
+    - name: Enabling Docker CE repo
+      shell: dnf config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+      args:
+        warn: false
+      register: stdout
+    - debug:
+        msg: "{{ stdout }}"
+    - name: Check repo list for Docker CE repo
+      shell: dnf repolist | grep "Docker CE"
+      args:
+        warn: false
+      register: stdout
+    - debug:
+        msg: "{{ stdout }}"
+    - name: Install Docker CE
+      shell: dnf install docker-ce --nobest -y
+      args:
+        warn: false
+      register: stdout
+    - debug:
+        msg: "{{ stdout }}"
+    - name: Start Docker service
+      service:
+        name: docker
+        state: started
+    - name: Enable Docker service, and not touch the state
+      service:
+        name: docker
+        enabled: yes
+    - name: Populate service facts
+      service_facts:
+    - debug:
+        var: ansible_facts.services["docker.service"]
+    - name: Check Docker version
+      shell: docker --version
+      register: stdout
+    - debug:
+        msg: "{{ stdout }}"
