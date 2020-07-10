@@ -3,6 +3,7 @@ import docker
 import json
 
 client = docker.from_env()
+# client = docker.DockerClient(base_url="unix://var/run/docker.sock")
 
 containers_list = client.containers.list()
 
