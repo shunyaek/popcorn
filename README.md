@@ -26,6 +26,28 @@ PS C:\soda-opener> .\opener.ps1
 - Support for different browsers.
 - A GUI for the same.
 
+### Ansible Forge
+
+Ansible Forge is a collection of Ansible playbooks and tools (built using Ansible APIs, Python etc.).
+The other intended purpose for this repo is to serve as the source for Ansible Playbooks for our AWX instance that is currently being built.
+
+The following playbooks are included:
+
+- Install Docker CE on CentOS 8
+- Install NGINX on CentOS 8
+- Install Prometheus Server on CentOS 8
+- Install node_exporter for Prometheus monitoring
+- Gather service facts for Prometheus, node_exporter, Grafana, Docker and NGINX
+- Gather service facts for just the monitoring stack (Prometheus, node_exporter, and Grafana)
+
+Coming soon:
+
+- Idempotent service start
+- NGINX firewall configuration
+- Install Grafana on CentOS 8
+
+**NOTE**: *The monitoring stack is still a build-in-process. Coming soon is alertmanager integration*.
+
 ### Pier
 
 Pier is a Python tool to obtain information about Docker containers. It can be statistics such as:
