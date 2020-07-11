@@ -1,0 +1,8 @@
+- hosts: shunyaek
+  gather_facts: false
+  name: "Installs NGINX on CentOS 8"
+  tasks:
+    - name: Install NGINX
+      dnf:
+        name: nginx
+        state: latest

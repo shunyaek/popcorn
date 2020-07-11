@@ -1,6 +1,6 @@
 all:
   children:
-    shunyaek-test:
+    shunyaek_test:
       hosts:
         157.245.104.17:
           ansible_user: "root"

@@ -14,3 +14,7 @@
       service_facts:
     - debug:
         var: ansible_facts.services['docker.service']
+    - name: Getting service facts for NGINX
+      service_facts:
+    - debug:
+        var: ansible_facts.services['nginx.service']
