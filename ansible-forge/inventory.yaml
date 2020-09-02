@@ -13,3 +13,11 @@ all:
         157.245.104.17:
           ansible_user: "root"
           ansible_connection: smart
+    docker:
+      hosts:
+        13.233.178.144:
+          ansible_user: "centos"
+          ansible_connection: smart
+        13.127.110.114:
+          ansible_user: "centos"
+          ansible_connection: smart
