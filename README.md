@@ -31,8 +31,30 @@ PS C:\soda-opener> .\opener.ps1
 Ansible Forge is a collection of Ansible playbooks and tools (built using Ansible APIs, Python etc.).
 The other intended purpose for this repo is to serve as the source for Ansible Playbooks for our AWX instance that is currently being built.
 
+To install Ansible, the simplest way is to use `pip`, Python's package manager:
+
+- Create a virtual environment for Ansible using `venv`:
+
+```bash
+python -m venv ansible
+```
+
+- Activate the virtual environment:
+```bash
+source ansible/bin/activate
+```
+
+- Install Ansible using `pip`:
+
+```bash
+pip install ansible
+```
+
+**NOTE**: Don't forget to add the environment directory to your .gitignore if you are working with a Git repository along-with your Ansible setup.
+
 The following playbooks are included:
 
+- Install Docker CE on CentOS 7
 - Install Docker CE on CentOS 8
 - Install NGINX on CentOS 8
 - Install Prometheus Server on CentOS 8

@@ -6,6 +6,7 @@
       yum:
         name: "{{ packages }}"
         state: absent
+      become: yes
       vars:
         packages:
           - docker
@@ -23,6 +24,7 @@
       yum:
         name: yum-utils
         state: latest
+      become: yes
       register: stdout
     - debug:
         msg: "{{ stdout }}"
@@ -37,6 +39,7 @@
       yum:
         name: "{{ packages }}"
         state: latest
+      become: yes
       vars:
         packages:
           - docker-ce
@@ -49,10 +52,12 @@
       service:
         name: docker
         state: started
+      become: yes
     - name: Enable Docker service, and not touch the state
       service:
         name: docker
         enabled: yes
+      become: yes
     - name: Populate service facts
       service_facts:
     - debug:
@@ -69,6 +74,7 @@
         name: centos
         groups: docker
         append: yes
+      become: yes
     - name: Check Docker version
       shell: docker --version
       register: stdout
