@@ -1,0 +1,5 @@
+- hosts: shunyaek
+  gather_facts: false
+  name: "Initial server setup on CentOS 8"
+  tasks:
+    - name: 
