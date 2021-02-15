@@ -1,0 +1,9 @@
+- hosts: shunyaek
+  gather_facts: false
+  name: "Testing grounds..."
+  tasks:
+    - name: Add a line to a file if the file does not exist, without passing regexp
+      ansible.builtin.lineinfile:
+        path: /tmp/testfile
+        line: HARSHIT WAS HERE!!!
+        create: yes

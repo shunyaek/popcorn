@@ -1,0 +1,64 @@
+- hosts: shunyaek
+  gather_facts: false
+  name: "Installs AdoptOpenJDK 11 (LTS) on Ubuntu"
+  tasks:
+    - name: "Gather Ubuntu release codename"
+      ansible.builtin.shell: cat /etc/os-release | grep UBUNTU_CODENAME | cut -d = -f 2
+      args:
+        executable: /bin/bash
+      register: release_codename
+    - debug:
+        msg: "{{ release_codename.stdout }}"
+    - name: "Update apt cache"
+      apt:
+        update_cache: yes
+    - name: "Install pre-requisites (wget, apt-transport-https gnupg)"
+      apt:
+        pkg:
+          - wget
+          - apt-transport-https
+          - gnupg
+        state: latest
+        update_cache: yes
+    - name: "Download AdoptOpenJDK GPG public key"
+      get_url:
+        url: https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public
+        dest: /root/adoptopenjdk11hotspot.gpg.public
+        mode: "0440"
+    - name: "Add AdoptOpenJDK GPG public key"
+      ansible.builtin.shell: apt-key add /root/adoptopenjdk11hotspot.gpg.public
+      args:
+        warn: no
+        executable: /bin/bash
+      become: yes
+    - name: "Configure AdoptOpenJDK's apt repository"
+      ansible.builtin.shell: echo "deb https://adoptopenjdk.jfrog.io/adoptopenjdk/deb {{ release_codename["stdout"] }} main" | tee /etc/apt/sources.list.d/adoptopenjdk.list
+      become: yes
+      args:
+        executable: /bin/bash
+      register: adoptopenjdk_apt_repository_configuration_output
+    - debug:
+        msg: "{{ adoptopenjdk_apt_repository_configuration_output.stdout }}"
+    - name: "Refresh package indexes"
+      apt:
+        update_cache: yes
+    - name: "Install AdoptOpenJDK 11 LTS with HotSpot JVM (adoptopenjdk-11-hotspot)"
+      apt:
+        name: adoptopenjdk-11-hotspot
+        state: latest
+    - name: "Fetch Java version"
+      ansible.builtin.shell: java -version
+      args:
+        executable: /bin/bash
+      register: java_version
+    - debug:
+        msg: "{{ java_version.stderr_lines }}"
+    - name: "Append JAVA_HOME to .bashrc"
+      ansible.builtin.lineinfile:
+        path: $HOME/.bashrc
+        line: JAVA_HOME=/usr/lib/jvm/adoptopenjdk-11-hotspot-amd64/
+        create: yes
+    - name: "Reload the shell"
+      ansible.builtin.shell: source $HOME/.bashrc
+      args:
+        executable: /bin/bash
