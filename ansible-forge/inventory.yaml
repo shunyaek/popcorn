@@ -7,9 +7,9 @@ all:
           ansible_connection: smart
     shunyaek:
       hosts:
-        159.65.159.120:
+        143.110.182.104:
           ansible_user: "root"
-          ansible_password: shunyaekansible01SE
+          ansible_password: elasticsearch01Ansible
     docker:
       hosts:
         13.233.178.144:

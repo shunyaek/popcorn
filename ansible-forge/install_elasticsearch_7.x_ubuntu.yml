@@ -1,0 +1,93 @@
+- hosts: shunyaek
+  gather_facts: false
+  name: "Installs Elasticsearch 7.x on Ubuntu"
+  tasks:
+    - name: "Update apt cache"
+      apt:
+        update_cache: yes
+    - name: "Install pre-requisites (wget, apt-transport-https gnupg)"
+      apt:
+        pkg:
+          - wget
+          - apt-transport-https
+          - gnupg
+        state: latest
+        update_cache: yes
+    - name: "Download Elastic Co. GPG public key"
+      get_url:
+        url: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+        dest: /root/GPG-KEY-elasticsearch
+        mode: "0440"
+    - name: "Add Elastic Co. GPG public key"
+      ansible.builtin.shell: apt-key add /root/GPG-KEY-elasticsearch
+      args:
+        warn: no
+        executable: /bin/bash
+      become: yes
+    - name: "Configure Elastic Co.'s apt repository"
+      ansible.builtin.shell: echo "deb https://artifacts.elastic.co/packages/7.x/apt stable main" | tee /etc/apt/sources.list.d/elastic-7.x.list
+      become: yes
+      args:
+        executable: /bin/bash
+      register: elastic_co_apt_repository_configuration_output
+    - debug:
+        msg: "{{ elastic_co_apt_repository_configuration_output.stdout }}"
+    - name: "Refresh package indexes"
+      apt:
+        update_cache: yes
+    - name: "Install Elasticsearch 7.x (elasticsearch)"
+      apt:
+        name: elasticsearch
+        state: latest
+    - name: "Backup Elasticsearch configuration file"
+      ansible.builtin.shell: cp /etc/elasticsearch/elasticsearch.yml /etc/elasticsearch/elasticsearch.yml.backup
+      become: yes
+      args:
+        executable: /bin/bash
+    - name: "Setting up Elasticsearch cluster name"
+      ansible.builtin.lineinfile:
+        path: /etc/elasticsearch/elasticsearch.yml
+        line: "cluster.name: my-application"
+        create: yes
+    - name: "Setting up Elasticsearch node name"
+      ansible.builtin.lineinfile:
+        path: /etc/elasticsearch/elasticsearch.yml
+        line: "node.name: magecomp4"
+        create: yes
+    - name: "Setting up Elasticsearch network publish host"
+      ansible.builtin.lineinfile:
+        path: /etc/elasticsearch/elasticsearch.yml
+        line: "network.publish_host: localhost"
+        create: yes
+    - name: "Setting up Elasticsearch discovery seed hosts"
+      ansible.builtin.lineinfile:
+        path: /etc/elasticsearch/elasticsearch.yml
+        line: "discovery.seed_hosts: []"
+        create: yes
+    - name: "Setting up Elasticsearch network host"
+      ansible.builtin.lineinfile:
+        path: /etc/elasticsearch/elasticsearch.yml
+        line: "network.host: 127.0.0.1"
+        create: yes
+    - name: "Setting up Elasticsearch HTTP port"
+      ansible.builtin.lineinfile:
+        path: /etc/elasticsearch/elasticsearch.yml
+        line: "http.port: 9200"
+        create: yes
+    - name: "Setting up Elasticsearch initial master nodes for the cluster"
+      ansible.builtin.lineinfile:
+        path: /etc/elasticsearch/elasticsearch.yml
+        line: "cluster.initial_master_nodes: 127.0.0.1"
+        create: yes
+    - name: "Start Elasticsearch service"
+      service:
+        name: elasticsearch
+        state: started
+    - name: Enable Elasticsearch service, and not touch the state
+      service:
+        name: elasticsearch
+        enabled: yes
+    - name: Fetch Elasticsearch service status
+      service_facts:
+    - debug:
+        var: ansible_facts.services["elasticsearch.service"]
