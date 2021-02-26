@@ -1,0 +1,32 @@
+- hosts: shunyaek
+  gather_facts: false
+  name: "Installs Apache2 Web-Server on Ubuntu"
+  tasks:
+    - name: "Gather Ubuntu release codename"
+      ansible.builtin.shell: cat /etc/os-release | grep UBUNTU_CODENAME | cut -d = -f 2
+      args:
+        executable: /bin/bash
+      register: release_codename
+    - debug:
+        msg: "{{ release_codename.stdout }}"
+    - name: "Update apt cache"
+      apt:
+        update_cache: yes
+    - name: "Install Apache2"
+      apt:
+        pkg:
+          - apache2
+        state: latest
+        update_cache: yes
+    - name: "Enable apache2 service and ensure it is not masked"
+      ansible.builtin.systemd:
+        name: apache2
+        enabled: yes
+        masked: no
+    - name: "Start apache2 service"
+      ansible.builtin.systemd:
+        state: started
+        name: apache2
+    - name: "Get status of apache2 service"
+      ansible.builtin.debug:
+        var: ansible_facts.services['apache2.service']

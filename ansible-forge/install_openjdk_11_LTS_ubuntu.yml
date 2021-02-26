@@ -23,10 +23,10 @@
     - name: "Download AdoptOpenJDK GPG public key"
       get_url:
         url: https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public
-        dest: /root/adoptopenjdk11hotspot.gpg.public
+        dest: $HOME/adoptopenjdk11hotspot.gpg.public
         mode: "0440"
     - name: "Add AdoptOpenJDK GPG public key"
-      ansible.builtin.shell: apt-key add /root/adoptopenjdk11hotspot.gpg.public
+      ansible.builtin.shell: apt-key add $HOME/adoptopenjdk11hotspot.gpg.public
       args:
         warn: no
         executable: /bin/bash

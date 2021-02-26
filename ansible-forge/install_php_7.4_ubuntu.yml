@@ -1,0 +1,82 @@
+- hosts: shunyaek
+  gather_facts: false
+  name: "Installs PHP on Ubuntu"
+  tasks:
+    - name: "Gather Ubuntu release codename"
+      ansible.builtin.shell: cat /etc/os-release | grep UBUNTU_CODENAME | cut -d = -f 2
+      args:
+        executable: /bin/bash
+      register: release_codename
+    - debug:
+        msg: "{{ release_codename.stdout }}"
+    - name: "Update apt cache"
+      apt:
+        update_cache: yes
+    - name: "Install pre-requisites (wget, apt-transport-https gnupg)"
+      apt:
+        pkg:
+          - wget
+          - apt-transport-https
+          - gnupg
+          - software-properties-common
+        state: latest
+        update_cache: yes
+    - name: "Add ondrej/PHP repository from PPA and install its signing key"
+      ansible.builtin.apt_repository:
+        repo: ppa:ondrej/php
+        update_cache: yes
+    - name: "Install PHP and other required packages"
+      apt:
+        pkg:
+          - php7.4
+          - php7.4-fpm
+          - php7.4-mysql
+          - php7.4-curl
+          - php7.4-gd
+          - php7.4-json
+          - php7.4-mcrypt
+          - libapache2-mod-php7.4
+          - libapache2-mod-fcgid
+        state: latest
+        update_cache: yes
+    - name: "Enable php7.4-fpm service and ensure it is not masked"
+      ansible.builtin.systemd:
+        name: php7.4-fpm
+        enabled: yes
+        masked: no
+    - name: "Start php7.4-fpm service"
+      ansible.builtin.systemd:
+        state: started
+        name: php7.4-fpm
+    - name: "Get status of php7.4-fpm service"
+      ansible.builtin.debug:
+        var: ansible_facts.services['php7.4-fpm.service']
+    - name: "Restart Apache web-server to pick-up configuration changes"
+      ansible.builtin.systemd:
+        state: restarted
+        daemon_reload: yes
+        name: apache2
+    - name: "Enable the Apache2 module actions"
+      community.general.apache2_module:
+        state: present
+        name: actions
+    - name: "Enable the Apache2 module fcgid"
+      community.general.apache2_module:
+        state: present
+        name: fcgid
+    - name: "Enable the Apache2 module alias"
+      community.general.apache2_module:
+        state: present
+        name: alias
+    - name: "Enable the Apache2 module proxy_fcgi"
+      community.general.apache2_module:
+        state: present
+        name: proxy_fcgi
+    - name: "Restart Apache web-server to pick-up configuration changes"
+      ansible.builtin.systemd:
+        state: restarted
+        daemon_reload: yes
+        name: apache2
+    - name: "Get status of apache2 service"
+      ansible.builtin.debug:
+        var: ansible_facts.services['apache2.service']

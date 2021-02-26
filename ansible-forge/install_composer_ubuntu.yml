@@ -1,0 +1,47 @@
+- hosts: shunyaek
+  gather_facts: false
+  name: "Installs Composer on Ubuntu"
+  tasks:
+    - name: "Gather Ubuntu release codename"
+      ansible.builtin.shell: cat /etc/os-release | grep UBUNTU_CODENAME | cut -d = -f 2
+      args:
+        executable: /bin/bash
+      register: release_codename
+    - debug:
+        msg: "{{ release_codename.stdout }}"
+    - name: "Update apt cache"
+      apt:
+        update_cache: yes
+    - name: "Install pre-requisites (wget, apt-transport-https gnupg)"
+      apt:
+        pkg:
+          - wget
+          - apt-transport-https
+          - gnupg
+        state: latest
+        update_cache: yes
+    - name: "Download Composer installer file"
+      ansible.builtin.shell: php -r "copy('https://getcomposer.org/installer', '$HOME/composer-setup.php');"
+      become: yes
+      args:
+        executable: /bin/bash
+    - name: "Verify the installer checksum"
+      ansible.builtin.shell: php -r "if (hash_file('sha384', '$HOME/composer-setup.php') === '756890a4488ce9024fc62c56153228907f1545c228516cbf63f885e036d37e9a59d27d63f46af1d4d07ee0f76181c7d3') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('$HOME/composer-setup.php'); } echo PHP_EOL;"
+      become: yes
+      args:
+        executable: /bin/bash
+    - name: "Install Composer"
+      ansible.builtin.shell: php $HOME/composer-setup.php
+      become: yes
+      args:
+        executable: /bin/bash
+    - name: "Make Composer global"
+      ansible.builtin.shell: mv $HOME/composer.phar /usr/local/bin/composer
+      become: yes
+      args:
+        executable: /bin/bash
+    - name: "Remove Composer installer from the system"
+      ansible.builtin.shell: php -r "unlink('composer-setup.php');"
+      become: yes
+      args:
+        executable: /bin/bash
